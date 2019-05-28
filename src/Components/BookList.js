@@ -14,37 +14,16 @@ class BookList extends React.Component {
     filter: null, 
   }
 
-  getURLParams() {
+  getData() {
+    let url = 'https://www.googleapis.com/books/v1/volumes?' 
+    let q = this.state.q ? 'q=' + this.state.q : "";
+    let printType = this.state.printType ? '&printType=' + this.state.printType : "";
+    let filter = this.state.filter ? '&filter=' + this.state.filter : "";
 
-    // let url = 'https://www.googleapis.com/books/v1/volumes?';
-
-    // if this.state.q ? 'q=' + this.state.q : ""
-
-
-
-  } 
-
-
-  componentDidMount() {
-    console.log(this.state.q);
-    console.log(this.state.printType);
-    console.log(this.state.filter);
-    console.log('i made it to component mount');
-
-    // let url = 'https://www.googleapis.com/books/v1/volumes?';
-    // (this.state.q ? url += 'q=' + this.state.q : "");
-    // console.log(url);
-
-    // NEED TO RETURN THESE
-    let url = 'https://www.googleapis.com/books/v1/volumes?' + (this.state.q ? url += 'q=' + this.state.q : "");
-    url += (this.state.printType ? '&printType=' + this.state.printType : "");
-    url += (this.state.filter ? '&filter=' + this.state.filter : "");
-    url += '&key=' + this.state.api;
-
-    // console.log(url);
-
-    fetch(url)
-    // fetch('https://www.googleapis.com/books/v1/volumes?q=' + this.state.q + '&key=' + this.state.api)
+    let completeURL = url + q + printType + filter;
+    
+    fetch(completeURL)
+      // fetch('https://www.googleapis.com/books/v1/volumes?q=' + this.state.q + '&key=' + this.state.api)
       .then(response => {
         if (!response.ok) {
           throw new Error('Something went wrong');
@@ -63,7 +42,7 @@ class BookList extends React.Component {
           const img = item.volumeInfo.imageLinks.thumbnail;
           // const price = 0;
 
-          const price = item.saleInfo.retailPrice ? item.saleInfo.retailPrice.amount: 0; // In USD
+          const price = item.saleInfo.retailPrice ? item.saleInfo.retailPrice.amount : 0; // In USD
           console.log(price);
           // create Book component or something along those lines
           return {
@@ -72,20 +51,43 @@ class BookList extends React.Component {
             desc,
             img,
             price,
-          }})
-          console.log(books);
-          this.setState( {
-            books,
-          })
+          }
         })
+        console.log(books);
+        this.setState({
+          books,
+        })
+      })
       // .then(books => )
-      .catch(error => { 
+      .catch(error => {
         console.log(error.message);
-        this.setState( {
-        error: error.message
-      })});
+        this.setState({
+          error: error.message
+        })
+      });
 
   }
+
+
+
+
+
+  
+
+
+
+  // componentDidMount() {
+  //   console.log(this.state.q);
+  //   console.log(this.state.printType);
+  //   console.log(this.state.filter);
+  //   console.log('i made it to component mount');
+
+  //   // let url = 'https://www.googleapis.com/books/v1/volumes?';
+  //   // (this.state.q ? url += 'q=' + this.state.q : "");
+  //   // console.log(url);
+
+  //   // NEED TO RETURN THESE
+    
 
   handleSearch = (event) => {
 
@@ -103,7 +105,8 @@ class BookList extends React.Component {
       q: titleSearch,
       filter: filterSearch,
       printType: printTypeSearch,
-    });
+    }, this.getData );
+    //this.getData();
 
     // set state
   }
@@ -133,8 +136,7 @@ class BookList extends React.Component {
     //   <ul className="booklist">
     //     {booklist}
     //   </ul>
-}
-
+  }
 
 
 export default BookList;
