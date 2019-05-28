@@ -2,12 +2,16 @@ import React from 'react';
 import Book from './Book';
 // import Search from './Search';
 import google_key  from './../keys.js'
+import Search from './Search'
 
 class BookList extends React.Component {
 
   state = {
     books: [],
     api: google_key,
+    q: "",
+    printType: "",
+    filter: "", 
   }
 
   
@@ -15,8 +19,8 @@ class BookList extends React.Component {
 
   componentDidMount() {
     console.log('i made it to component mount');
-    // fetch(('https://www.googleapis.com/books/v1/volumes?q=trees&key=' + this.state.api)
     fetch('https://www.googleapis.com/books/v1/volumes?q=trees&key=' + this.state.api)
+    // fetch('https://www.googleapis.com/books/v1/volumes?q=' + this.state.q + '&key=' + this.state.api)
       .then(response => {
         if (!response.ok) {
           throw new Error('Something went wrong');
@@ -34,7 +38,8 @@ class BookList extends React.Component {
           const desc = item.volumeInfo.description;
           const img = item.volumeInfo.imageLinks.thumbnail;
           // const price = 0;
-          const price = item.saleInfo.listPrice.amount // In USD
+
+          const price = item.saleInfo.retailPrice ? item.saleInfo.retailPrice.amount: 0; // In USD
           console.log(price);
           // create Book component or something along those lines
           return {
@@ -58,15 +63,21 @@ class BookList extends React.Component {
 
   }
 
+  handleSearch = () => {
+    
+  }
 
 
   render() {
 
     const booklist = this.state.books.map((item, index) => {
       return (
+      <div>
+        <Search handleSearch={this.handleSearch}/>
       <li key={index}>
         < Book title={item.title} authors={item.authors} desc={item.desc} img={item.img} price={item.price} />
       </li>
+      </div>
       );
       
     })
