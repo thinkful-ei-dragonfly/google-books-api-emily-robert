@@ -1,13 +1,13 @@
 import React from 'react';
 import Book from './Book';
 import Search from './Search';
-
+import { google_key } from './../keys'
 
 class BookList extends React.Component {
 
   state = {
     books: [],
-    api: 'AIzaSyDPDcM6VZ7IIVHFx_IAPnan9jiRBexSNcI',
+    api: {google_key},
   }
 
   componentDidMount() {
