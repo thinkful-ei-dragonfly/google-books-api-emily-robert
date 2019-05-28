@@ -10,21 +10,23 @@ class Search extends React.Component {
   //     title: [],
   //   }
 
- handleSearchResults = () => {
+
+  //
+//  handleSearchResults = () => {
     
 
- }
+//  }
 
   
   render() {
     return (
       <div>
-        <form onSubmit={this.handleSearchResults}>
+        <form onSubmit={this.props.handleSearch}>
         <label htmlFor="search"></label>
         <input name="search" id="search" type="text"></input>
 
         <label>Book Type</label>
-        <select id="bookType">
+        <select name="bookType" id="bookType">
           <option value="">--Please choose an option--</option>
           <option value="ebooks">All Google eBooks</option>
           <option value="free-ebooks">Full free ebook</option>
@@ -34,13 +36,13 @@ class Search extends React.Component {
         </select>
 
         <label>Print Type</label>
-        <select id="printType">
+        <select name="printType" id="printType">
           <option value="">--Please choose an option--</option>
           <option value="all">All content types</option>
           <option value="books">Just books</option>
           <option value="magazines">Just magazines</option>
         </select>
-        <button value="search" type="button">Search </button>
+        <button type="submit">Search</button>
 
         </form>
 

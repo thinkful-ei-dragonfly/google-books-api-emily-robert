@@ -9,17 +9,41 @@ class BookList extends React.Component {
   state = {
     books: [],
     api: google_key,
-    q: "",
-    printType: "",
-    filter: "", 
+    q: null,
+    printType: null,
+    filter: null, 
   }
 
-  
+  getURLParams() {
+
+    // let url = 'https://www.googleapis.com/books/v1/volumes?';
+
+    // if this.state.q ? 'q=' + this.state.q : ""
+
+
+
+  } 
 
 
   componentDidMount() {
+    console.log(this.state.q);
+    console.log(this.state.printType);
+    console.log(this.state.filter);
     console.log('i made it to component mount');
-    fetch('https://www.googleapis.com/books/v1/volumes?q=trees&key=' + this.state.api)
+
+    // let url = 'https://www.googleapis.com/books/v1/volumes?';
+    // (this.state.q ? url += 'q=' + this.state.q : "");
+    // console.log(url);
+
+    // NEED TO RETURN THESE
+    let url = 'https://www.googleapis.com/books/v1/volumes?' + (this.state.q ? url += 'q=' + this.state.q : "");
+    url += (this.state.printType ? '&printType=' + this.state.printType : "");
+    url += (this.state.filter ? '&filter=' + this.state.filter : "");
+    url += '&key=' + this.state.api;
+
+    // console.log(url);
+
+    fetch(url)
     // fetch('https://www.googleapis.com/books/v1/volumes?q=' + this.state.q + '&key=' + this.state.api)
       .then(response => {
         if (!response.ok) {
@@ -63,8 +87,25 @@ class BookList extends React.Component {
 
   }
 
-  handleSearch = () => {
+  handleSearch = (event) => {
+
+    console.log('i registered click');
+
+    event.preventDefault();
     
+    let titleSearch = event.target.search.value;
+    console.log(titleSearch);
+    let filterSearch = event.target.bookType.value;
+    console.log(filterSearch);
+    let printTypeSearch = event.target.printType.value;
+    console.log(printTypeSearch);
+    this.setState( {
+      q: titleSearch,
+      filter: filterSearch,
+      printType: printTypeSearch,
+    });
+
+    // set state
   }
 
 
@@ -72,28 +113,28 @@ class BookList extends React.Component {
 
     const booklist = this.state.books.map((item, index) => {
       return (
-      <div>
-        <Search handleSearch={this.handleSearch}/>
       <li key={index}>
         < Book title={item.title} authors={item.authors} desc={item.desc} img={item.img} price={item.price} />
       </li>
+      )});
+
+      return (
+      <div>
+        <Search handleSearch={this.handleSearch}/>
+        <ul id="booklist"> 
+          {booklist}
+        </ul>
       </div>
       );
       
-    })
+    }
 
-    return ( 
-      <ul className="booklist">
-        {booklist}
-      </ul>
-
-    )
-
-
-
-
+    // return ( 
+    //   <ul className="booklist">
+    //     {booklist}
+    //   </ul>
 }
-}
+
 
 
 export default BookList;
