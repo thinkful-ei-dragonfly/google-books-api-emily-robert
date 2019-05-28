@@ -7,7 +7,7 @@ class BookList extends React.Component {
 
   state = {
     books: [],
-    api: {google_key},
+    api: google_key,
   }
 
   componentDidMount() {
