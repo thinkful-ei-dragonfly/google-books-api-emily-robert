@@ -1,7 +1,7 @@
 import React from 'react';
 import Book from './Book';
-import Search from './Search';
-import { google_key } from './../keys'
+// import Search from './Search';
+import google_key  from './../keys.js'
 
 class BookList extends React.Component {
 
@@ -10,10 +10,15 @@ class BookList extends React.Component {
     api: google_key,
   }
 
+  
+
+
   componentDidMount() {
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=trees&key={this.state.api}`)
+    console.log('i made it to component mount');
+    // fetch(('https://www.googleapis.com/books/v1/volumes?q=trees&key=' + this.state.api)
+    fetch('https://www.googleapis.com/books/v1/volumes?q=trees&key=' + this.state.api)
       .then(response => {
-        if(!response.ok) {
+        if (!response.ok) {
           throw new Error('Something went wrong');
         }
         return response;
@@ -21,13 +26,35 @@ class BookList extends React.Component {
       .then(response => response.json())
       .then(data => {
         const books = data.items.map(item => {
-          const title = this.item.volumeInfo.title;
+          const title = item.volumeInfo.title;
+          // console.log('i made it to map');
+          // console.log(title);
           //authors is an array of strings
-          const authors = this.item.volumeInfo.authors;
-          const desc = this.item.volumeInfo.description;
-          const img = this.item.volumeInfo.imageLinks.thumbnail;
+          const authors = item.volumeInfo.authors;
+          const desc = item.volumeInfo.description;
+          const img = item.volumeInfo.imageLinks.thumbnail;
+          // const price = 0;
+          const price = item.saleInfo.listPrice.amount // In USD
+          console.log(price);
+          // create Book component or something along those lines
+          return {
+            title,
+            authors,
+            desc,
+            img,
+            price,
+          }})
+          console.log(books);
+          this.setState( {
+            books,
+          })
         })
-      })
+      // .then(books => )
+      .catch(error => { 
+        console.log(error.message);
+        this.setState( {
+        error: error.message
+      })});
 
   }
 
@@ -35,12 +62,19 @@ class BookList extends React.Component {
 
   render() {
 
-    const booklist = this.state.books.map(item => )
-    return(
-      <div className="booklist">
-        
+    const booklist = this.state.books.map((item, index) => {
+      return (
+      <li key={index}>
+        < Book title={item.title} authors={item.authors} desc={item.desc} img={item.img} price={item.price} />
+      </li>
+      );
+      
+    })
 
-      </div>
+    return ( 
+      <ul className="booklist">
+        {booklist}
+      </ul>
 
     )
 
